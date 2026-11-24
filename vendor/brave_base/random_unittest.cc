@@ -7,6 +7,7 @@
 
 #include "brave/vendor/brave_base/random.h"
 
+
 #include <math.h>
 
 #include "testing/gtest/include/gtest/gtest.h"
