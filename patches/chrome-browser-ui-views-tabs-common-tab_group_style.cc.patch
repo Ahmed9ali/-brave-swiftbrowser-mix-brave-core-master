@@ -1,0 +1,30 @@
+diff --git a/chrome/browser/ui/views/tabs/common/tab_group_style.cc b/chrome/browser/ui/views/tabs/common/tab_group_style.cc
+index 9edd4733056efa86f83583f2b47a99d40e4dbd59..1701adb5a6b23258783f7949c4057e98ceca014d 100644
+--- a/chrome/browser/ui/views/tabs/common/tab_group_style.cc
++++ b/chrome/browser/ui/views/tabs/common/tab_group_style.cc
+@@ -7,6 +7,7 @@
+ #include <optional>
+ 
+ #include "chrome/browser/ui/layout_constants.h"
++#include "chrome/browser/ui/tabs/features.h"
+ #include "chrome/browser/ui/tabs/tab_style.h"
+ #include "chrome/browser/ui/views/tabs/shared/tab_strip_types.h"
+ #include "ui/gfx/geometry/insets.h"
+@@ -60,11 +61,17 @@ int TabGroupStyle::GetFocusedChipHeight() {
+ 
+ // static
+ gfx::Point TabGroupStyle::GetTitleChipOffset(std::optional<int> chip_height) {
++  gfx::Point offset = [&]() -> gfx::Point {
+   const int total_space =
+       GetLayoutConstant(LayoutConstant::kTabStripHeight) -
+       chip_height.value_or(GetEmptyChipSize()) -
+       GetLayoutConstant(LayoutConstant::kTabstripToolbarOverlap);
+   return gfx::Point(GetLeadingGroupHeaderPadding(), total_space / 2);
++  }();
++  if (tabs::HorizontalTabsUpdateEnabled()) {
++    offset.set_x(tabs::kHorizontalTabInset);
++  }
++  return offset;
+ }
+ 
+ // static
